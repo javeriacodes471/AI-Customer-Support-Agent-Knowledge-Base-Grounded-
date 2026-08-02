@@ -1,0 +1,214 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "bright-wave-chat",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -320,
+        32
+      ],
+      "id": "f731dcfa-e13e-4400-b339-2f942baabda3",
+      "name": "Webhook",
+      "webhookId": "dd550b9f-c321-46c5-b159-9e4c0a9f920a"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { reply: $json.output } }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        240,
+        32
+      ],
+      "id": "ec5abbe3-ca42-41d6-9498-4f4c50dc5e6f",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.message }}",
+        "options": {
+          "systemMessage": "You are the official AI customer support assistant for Bright Wave.\n\nYour job is to answer questions ONLY using information available in the connected Google Sheets tools.\n\nIMPORTANT RULES:\n\n1. When the user asks anything about Bright Wave, its services, offerings, FAQs, pricing, processes, or company information, ALWAYS use the connected Google Sheets tools first to retrieve the relevant information.\n\n2. The connected Google Sheets contain the official Bright Wave knowledge base. Treat their information as the primary and authoritative source.\n\n3. Do NOT use information about other companies with similar names, such as BrightWave Marketing or any other external company.\n\n4. Do NOT guess, invent, or rely on general knowledge when answering questions about Bright Wave.\n\n5. If the requested information cannot be found in the connected Google Sheets, reply:\n\"I couldn't find this information in Bright Wave's knowledge base. Please contact the Bright Wave team for more details.\"\n\n6. Answer clearly, accurately, and professionally based on the retrieved Bright Wave data.\n\n7. For every Bright Wave-related question, search the relevant Google Sheets tool before generating your final answer."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -112,
+        32
+      ],
+      "id": "d323ea50-bca3-4ee3-8dad-60b8dee67cf9",
+      "name": "AI Agent",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {
+          "maxTokensToSample": 1024,
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        208
+      ],
+      "id": "f3e5c530-bd97-4989-a8b8-5e491cca8d61",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "esTXOzSoOLOggHAQ",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1lNnPiDb20Kx6iQsW1Pm0x2fIJg5y9FCRbpc0bVTIgm8",
+          "mode": "list",
+          "cachedResultName": "M.A genral dataset",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lNnPiDb20Kx6iQsW1Pm0x2fIJg5y9FCRbpc0bVTIgm8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1418584144,
+          "mode": "list",
+          "cachedResultName": "Agency_Info",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lNnPiDb20Kx6iQsW1Pm0x2fIJg5y9FCRbpc0bVTIgm8/edit#gid=1418584144"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        64,
+        272
+      ],
+      "id": "99570569-284a-4220-acc2-e91c309803eb",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0OOCcrrNBUUWVtHj",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Kgfs-X0RzNjxmAYFSypYO2NageiIgdnWGTzEopCs2ac",
+          "mode": "list",
+          "cachedResultName": "FAQ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Kgfs-X0RzNjxmAYFSypYO2NageiIgdnWGTzEopCs2ac/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1632569136,
+          "mode": "list",
+          "cachedResultName": "FAQs",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Kgfs-X0RzNjxmAYFSypYO2NageiIgdnWGTzEopCs2ac/edit#gid=1632569136"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        272
+      ],
+      "id": "ce255393-0609-4db2-a5a5-2552b3586cda",
+      "name": "Get row(s) in sheet in Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0OOCcrrNBUUWVtHj",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 1,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}
